@@ -1,6 +1,6 @@
-import { createTransport } from 'nodemailer'; //grants access to send emails from server
+var nodemailer = require('nodemailer'); //grants access to send emails from server
 
-var transporter = createTransport({ //stores the email account that you are emailing from
+var transporter = nodemailer.createTransport({ //stores the email account that you are emailing from
   service: 'gmail',
   auth: {
     user: 'youremail@gmail.com',
