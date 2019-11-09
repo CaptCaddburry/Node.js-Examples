@@ -1,3 +1,8 @@
+var express = require('express');
+var session = require('express-session');
+var bodyParser = require('body-parser');
+var path = require('path');
+
 class Employee {
     constructor(name) {
         this._name = name;
@@ -11,34 +16,61 @@ class Employee {
     }
 }
 
-var jcadd = new Employee('Jimmy');
-var jcaddPassword = 1; //Math.floor(Math.random()*10);
+var customer = [];
+var customerPassword = [];
 
-var http = require('http');
-var formidable = require('formidable');
+var app = express();
+app.use(session({
+    secret: 'secret',
+    resave: true,
+    saveUninitialized: true
+}));
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.json());
 
-http.createServer(function(req,res) {
-    if(req.url != '/') {
-        var form = new formidable.IncomingForm();
-        form.parse(req, function (err, fields, file) {
-            if(fields.userid == jcadd.name) {
-                if(fields.pass == jcaddPassword) {
-                    res.write('You are in!');
-                    res.end();
+app.get('/', function(request, response) {
+    response.sendFile(path.join(__dirname + '/login.html'));
+});
+
+app.post('/auth', function(request, response) {
+    var username = request.body.username;
+    var password = request.body.password;
+    for(var i=0;i<customer.length;i++) {
+        if(username && password) {
+            if(username == customer[i]) {
+                if(password == customerPassword[i]) {
+                    request.session.loggedin = true;
+                    response.redirect('/home');
                 } else {
-                res.write('Password is Incorrect!');
-                res.end();
+                    response.redirect('/');
                 }
             } else {
-            res.write('Username is Incorrect!');
-            res.end();
+                response.redirect('/');
             }
-        });
-    } else {
-        res.writeHead(200, {'Content-Type': 'text/html'});
-        res.write('<form action="submitID">Username: <input type ="text" id ="userid" name ="userid"><br>'); //username
-        res.write('Password: <input type ="text" id ="pass" name ="pass"><br>'); //password
-        res.write('<input type="submit">'); //submit button
-        res.write('</form>');
+        } else {
+            response.send('Please enter Username and Password!');
+            response.end();
+        }
     }
-}).listen(8080);
+});
+
+app.get('/newUser', function(request, response) {
+    response.sendFile(path.join(__dirname + '/newUser.html'));
+});
+
+app.post('/newUserInput', function(request, response) {
+    customer.push(request.body.username);
+    customerPassword.push(request.body.password);
+    response.redirect('/');
+})
+
+app.get('/home', function(request, response) {
+    if(request.session.loggedin) {
+        response.send('You are in!');
+    } else {
+        response.send('Please login to view this page!');
+    }
+    response.end();
+});
+
+app.listen(8080);
