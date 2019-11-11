@@ -5,11 +5,11 @@ var bodyParser = require('body-parser');
 var path = require('path');
 
 var connection = mysql.createConnection({
-    host: 'localhost',
-    port: '3306',
-    user: 'root',
-    password: 'Sciencerocks00!',
-    database: 'nodelogin'
+    host: 'HostName',
+    port: 'Port',
+    user: 'User',
+    password: 'Password',
+    database: 'Database'
 });
 
 var app = express();
