@@ -3,13 +3,37 @@ var express = require('express');
 var session = require('express-session');
 var bodyParser = require('body-parser');
 var path = require('path');
+var nodemailer = require('nodemailer');
+var smtpTransport = require('nodemailer-smtp-transport');
+
+var transporter = nodemailer.createTransport({
+    host: 'smtp.office365.com',
+    port: 587,
+    secureConnection: false,
+    secure: true,
+    ignoreTLS: false,
+    requireTLS: true,
+    auth: {
+        user: 'cadd.enterprises@outlook.com',
+        pass: 'Sciencerocks00!'
+    },
+    tls: {
+        ciphers: 'SSLv3'
+    }
+});
+
+var authenticationNumber = Math.floor(Math.random() * (999999 - 100000)) + 100000;
+
+var verified = false;
+
+var name;
 
 var connection = mysql.createConnection({
-    host: 'HostName',
-    port: 'Port',
-    user: 'User',
-    password: 'Password',
-    database: 'Database'
+    host: 'localhost',
+    port: '3306',
+    user: 'root',
+    password: 'Sciencerocks00!',
+    database: 'nodelogin'
 });
 
 var app = express();
@@ -54,15 +78,47 @@ app.post('/newUserInput', function(request, response) {
     var email = request.body.email;
     var username = request.body.username;
     var password = request.body.password;
-    var sql = 'INSERT INTO accounts VALUES (?, ?, ?, ?, ?)';
-    var inputs = [firstName, age, email, username, password];
+    verified = false;
+    name = username;
+    var sql = 'INSERT INTO accounts VALUES (?, ?, ?, ?, ?, ?)';
+    var inputs = [firstName, age, email, username, password, verified];
     connection.query(sql, inputs);
-    response.redirect('/');
+    var mailOptions = {
+        from: 'cadd.enterprises@outlook.com',
+        to: email,
+        subject: 'Please Verify Your Account!',
+        text: authenticationNumber
+    };
+    transporter.sendMail(mailOptions, function(err, info) {
+        if(err) {
+            console.log(err);
+        } else {
+            console.log(info);
+        }
+    });
+    response.redirect('/send');
 });
 
 app.get('/backButton', function(request, response) {
     response.redirect('/');
-})
+});
+
+app.post('/verify', function(request, response) {
+    var verify = request.body.verify;
+    if(verify == authenticationNumber) {
+        verified = true;
+        var sql = 'UPDATE accounts SET verify = ? where username = ?';
+        var inputs = [verified, name];
+        connection.query(sql, inputs);
+        response.redirect('/');
+    } else {
+        response.redirect('/send');
+    }
+});
+
+app.get('/send', function(request, response) {
+    response.sendFile(path.join(__dirname + '/verify.html'));
+});
 
 app.get('/home', function(request, response) {
     if(request.session.loggedin) {
