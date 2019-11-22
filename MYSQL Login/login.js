@@ -14,8 +14,8 @@ var transporter = nodemailer.createTransport({
     ignoreTLS: false,
     requireTLS: true,
     auth: {
-        user: 'cadd.enterprises@outlook.com',
-        pass: 'Sciencerocks00!'
+        user: 'Username',
+        pass: 'Password'
     },
     tls: {
         ciphers: 'SSLv3'
@@ -84,7 +84,7 @@ app.post('/newUserInput', function(request, response) {
     var inputs = [firstName, age, email, username, password, verified];
     connection.query(sql, inputs);
     var mailOptions = {
-        from: 'cadd.enterprises@outlook.com',
+        from: 'Username',
         to: email,
         subject: 'Please Verify Your Account!',
         text: authenticationNumber
