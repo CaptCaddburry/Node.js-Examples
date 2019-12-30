@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Welcome to Cadd Enterprises</title>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes"/>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+        <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,700" rel="stylesheet" type="text/css">
+    </head>
+    <style>
+        body {
+            height: 100%;
+            margin: 0;
+            background: -webkit-linear-gradient(#539be2 20%, #dbd9d9 20%);
+            background: -ms-linear-gradient(#539be2 20%, #dbd9d9 20%);
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            font-family: Tahoma, Geneva, sans-serif;
+            text-align: center;
+        }
+        header {
+            padding: 20px;
+        }
+        .jumbotron {
+            display: flex;
+            align-items: center;
+            background-color: #ffffff;
+            border-radius: 15px;
+        }
+        header h1 {
+            color: #ffffff;
+        }
+        section h3, h4 {
+            color: #4d4d4d;
+        }
+        section h2 {
+            color: #000000;
+            border: 2px solid #539be2;
+            padding: 10px;
+        }
+        footer {
+            color: #000000;
+            padding: 10px;
+            position: fixed;
+            left: 0;
+            bottom: 0;
+        }
+    </style>
+    <body>
+        <header class="container">
+            <div class="row text-center">
+                <h1 class="col-xs-12 text-center">Welcome to Cadd Enterprises</h1>
+            </div>
+        </header>
+        <section class="jumbotron">
+            <div class="container">
+                <div class="row text-center">
+                    <h3>Hello there, {{username}}!</h3>
+                    <h4>Thank you for signing up for our service!</h4>
+                    <h4>Please use this Authentication Number to verify your account!</h4>
+                    <h2>{{verifyCode}}</h2>
+                </div>
+            </div>
+        </section>
+        <footer class="container">
+            <div class="row">
+                <small class="col-xs-12 text-left">&copy; 2019 Cadd Enterprises</small>
+            </div>
+        </footer>
+    </body>
+</html>
