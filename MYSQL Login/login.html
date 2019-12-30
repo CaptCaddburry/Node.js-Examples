@@ -1,65 +1,80 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="utf-8">
-		<title>Login Form Tutorial</title>
-		<style>
-		.login-form {
-			width: 300px;
-			margin: 0 auto;
-			font-family: Tahoma, Geneva, sans-serif;
-		}
-		.login-form h1 {
-			text-align: center;
-			color: #4d4d4d;
-			font-size: 24px;
-			padding: 20px 0 20px 0;
-		}
-		.login-form input[type="password"],
-		.login-form input[type="text"] {
-			width: 100%;
-			padding: 15px;
-			border: 1px solid #dddddd;
-			margin-bottom: 15px;
-			box-sizing:border-box;
-		}
-		.login-form input[type="submit"] {
-			width: 150px;
-			padding: 15px;
-			background-color: #535b63;
-			border: 1;
-			box-sizing: border-box;
-			cursor: pointer;
-			font-weight: bold;
-			color: #ffffff;
-            float: left;
-		}
-        .new-user-form input[type="submit"] {
-            width: 150px;
-            padding: 15px;
-            background-color: #535b63;
-            border: 1;
-            box-sizing: border-box;
-            cursor: pointer;
-            font-weight: bold;
-            color: #ffffff;
-            float: left;
+    <head>
+        <title>Login Form</title>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes"/>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+        <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,700" rel="stylesheet" type="text/css">
+    </head>
+    <style>
+        html {
+            min-height: 100%;
         }
-		</style>
-	</head>
-	<body>
-		<div class="login-form">
-			<h1>Login Form</h1>
-			<form action="auth" method="POST">
-				<input type="text" name="username" placeholder="Username" required>
-				<input type="password" name="password" placeholder="Password" required>
-                <input type="submit" value="Submit">
-			</form>
-        </div>
-        <div class="new-user-form">
-            <form action="newUser" method="GET">
-                <input type="submit" value="New User">
+        body {
+            margin: 0;
+            background: -webkit-linear-gradient(#539be2 20%, #dbd9d9 20%);
+            background: -ms-linear-gradient(#539be2 20%, dbd9d9 20%);
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            font-family: Tahoma, Geneva, sans-serif;
+        }
+        header {
+            text-align: center;
+            padding: 20px;
+            color: #ffffff;
+        }
+        div.container {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 15px;
+        }
+        form {
+            color: #4d4d4d;
+        }
+        .new-user-form {
+            text-align: right;
+        }
+        footer {
+            color: #000000;
+            padding: 10px;
+            position: fixed;
+            left: 0;
+            bottom: 0;
+        }
+    </style>
+    <body>
+        <header class="container">
+            <div class="row">
+                <h1 class="col-xs-12">Login Form</h1>
+            </div>
+        </header>
+        <div class="container">
+            <form action="auth" method="POST">
+                <div class="form-group col-xs-12">
+                    <label for="inputUsername">Username</label>
+                    <input type="text" class="form-control" id="inputUsername" name="username" required>
+                </div>
+                <div class="form-group col-xs-12">
+                    <label for="inputPassword">Password</label>
+                    <input type="password" class="form-control" id="inputPassword" name="password" required>
+                </div>
+                <div class="col-xs-6 sign-in">
+                    <form action="auth" method="GET">
+                        <input type="submit" class="btn btn-primary" value="Submit">
+                    </form>
+                </div>
+                <div class="col-xs-6 new-user-form">
+                    <form action="newUser" method="GET">
+                        <input type="submit" class="btn btn-primary" value="New User">
+                    </form>
+                </div>
             </form>
         </div>
-	</body>
+        <footer class="container">
+            <div class="row">
+                <small class="col-xs-12 text-left">&copy; 2019 Cadd Enterprises</small>
+            </div>
+        </footer>
+    </body>
 </html>
