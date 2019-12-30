@@ -4,36 +4,39 @@ var session = require('express-session');
 var bodyParser = require('body-parser');
 var path = require('path');
 var nodemailer = require('nodemailer');
-var smtpTransport = require('nodemailer-smtp-transport');
+var handlebars = require('handlebars');
+var fs = require('fs');
 
 var transporter = nodemailer.createTransport({
-    host: 'smtp.office365.com',
-    port: 587,
-    secureConnection: false,
-    secure: true,
-    ignoreTLS: false,
-    requireTLS: true,
+    host: host,
+    port: port,
     auth: {
-        user: 'Username',
-        pass: 'Password'
-    },
-    tls: {
-        ciphers: 'SSLv3'
+        user: user,
+        pass: pass
     }
 });
 
-var authenticationNumber = Math.floor(Math.random() * (999999 - 100000)) + 100000;
+var readHTMLFile = function(path, callback) {
+    fs.readFile(path, {encoding: 'utf-8'}, function(error, html) {
+        if(error) {
+            throw error;
+            callback(error);
+        } else {
+            callback(null, html);
+        }
+    });
+};
+
+var authenticationNumber;
 
 var verified = false;
 
-var name;
-
 var connection = mysql.createConnection({
-    host: 'localhost',
-    port: '3306',
-    user: 'root',
-    password: 'Sciencerocks00!',
-    database: 'nodelogin'
+    host: host,
+    port: port,
+    user: user,
+    password: password,
+    database: database
 });
 
 var app = express();
@@ -53,7 +56,7 @@ app.post('/auth', function(request, response) {
     var username = request.body.username;
     var password = request.body.password;
     if(username && password) {
-        connection.query('SELECT * FROM accounts WHERE username = ? AND password = ?', [username, password], function(error, results, fields) {
+        connection.query('SELECT * FROM accounts WHERE username = ? AND password = ? AND verify = 1', [username, password], function(error, results, fields) {
             if(results.length != 0) {
                 request.session.loggedin = true;
                 response.redirect('/home');
@@ -79,22 +82,28 @@ app.post('/newUserInput', function(request, response) {
     var username = request.body.username;
     var password = request.body.password;
     verified = false;
-    name = username;
-    var sql = 'INSERT INTO accounts VALUES (?, ?, ?, ?, ?, ?)';
-    var inputs = [firstName, age, email, username, password, verified];
-    connection.query(sql, inputs);
-    var mailOptions = {
-        from: 'Username',
-        to: email,
-        subject: 'Please Verify Your Account!',
-        text: authenticationNumber
-    };
-    transporter.sendMail(mailOptions, function(err, info) {
-        if(err) {
-            console.log(err);
-        } else {
-            console.log(info);
-        }
+    authenticationNumber = Math.floor(Math.random() * (999999 - 100000)) + 100000;
+    connection.query('INSERT INTO accounts VALUES (?, ?, ?, ?, ?, ?, ?)', [firstName, age, email, username, password, authenticationNumber, verified]);
+    readHTMLFile(__dirname + '/email.html', function(error, html) {
+        var template = handlebars.compile(html);
+        var replacements = {
+            username: firstName,
+            verifyCode: authenticationNumber
+        };
+        var htmlToSend = template(replacements);
+        var mailOptions = {
+            from: user,
+            to: String(email),
+            subject: 'Please Verify Your Account!',
+            html: htmlToSend
+        };
+        transporter.sendMail(mailOptions, function(err, info) {
+            if(err) {
+                console.log(err);
+            } else {
+                console.log(info.response);
+            }
+        });
     });
     response.redirect('/send');
 });
@@ -104,16 +113,17 @@ app.get('/backButton', function(request, response) {
 });
 
 app.post('/verify', function(request, response) {
+    var email = request.body.email;
     var verify = request.body.verify;
-    if(verify == authenticationNumber) {
-        verified = true;
-        var sql = 'UPDATE accounts SET verify = ? where username = ?';
-        var inputs = [verified, name];
-        connection.query(sql, inputs);
-        response.redirect('/');
-    } else {
-        response.redirect('/send');
-    }
+    connection.query('SELECT * FROM accounts WHERE email = ? and authentication = ?', [email, verify], function(error, results, fields) {
+        if(results.length != 0) {
+            verified = true;
+            connection.query('UPDATE accounts SET verify = ? WHERE email = ?', [verified, email]);
+            response.redirect('/');
+        } else {
+            response.redirect('/send');
+        }
+    });
 });
 
 app.get('/send', function(request, response) {
