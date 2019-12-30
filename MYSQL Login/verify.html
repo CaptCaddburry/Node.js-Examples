@@ -1,47 +1,77 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="utf-8">
-		<title>Account Verification</title>
-		<style>
-		.verify-form {
-			width: 300px;
-			margin: 0 auto;
-			font-family: Tahoma, Geneva, sans-serif;
-		}
-		.verify-form h1 {
-			text-align: center;
-			color: #4d4d4d;
-			font-size: 24px;
-			padding: 20px 0 20px 0;
-		}
-		.verify-form input[type="password"] {
-			width: 100%;
-			padding: 15px;
-			border: 1px solid #dddddd;
-			margin-bottom: 15px;
-			box-sizing:border-box;
-		}
-        .verify-form input[type="submit"] {
-            width: 300px;
-            padding: 15px;
-            background-color: #535b63;
-            border: 1;
-            box-sizing: border-box;
-            cursor: pointer;
-            font-weight: bold;
-            color: #ffffff;
-            float: left;
+    <head>
+        <title>Account Verification</title>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes"/>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+        <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,700" rel="stylesheet" type="text/css">
+    </head>
+    <style>
+        body {
+            height: 100%;
+            margin: 0;
+            background: -webkit-linear-gradient(#539be2 20%, #dbd9d9 20%);
+            background: -ms-linear-gradient(#539be2 20%, #dbd9d9 20%);
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            font-family: Tahoma, Geneva, sans-serif;
         }
-		</style>
-	</head>
-	<body>
-		<div class="verify-form">
-			<h1>Account Verification</h1>
-			<form action="verify" method="POST">
-				<input type="password" name="verify" placeholder="Passcode" required>
-                <input type="submit" value="Submit">
-			</form>
+        header {
+            text-align: center;
+            padding: 20px;
+            color: #ffffff;
+        }
+        div.container {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 15px;
+        }
+        div p {
+            font-size: 17px;
+            align-items: center;
+            text-align: center;
+            padding: 10px;
+        }
+        form {
+            color: #4d4d4d;
+        }
+        footer {
+            color: #000000;
+            padding: 10px;
+            position: fixed;
+            left: 0;
+            bottom: 0;
+        }
+    </style>
+    <body>
+        <header class="container">
+            <div class="row">
+                <h1 class="col-xs-12">Account Verification</h1>
+            </div>
+        </header>
+        <div class="container">
+            <form action="verify" method="POST">
+                <p class="col-xs-12">Please check your email and submit the Authentication Number that was sent!</p>
+                <div class="form-group col-xs-12">
+                    <label for="inputEmail">Email</label>
+                    <input type="email" class="form-control" id="inputEmail" name="email" required>
+                </div>
+                <div class="form-group col-xs-12">
+                    <label for="inputVerify">Passcode</label>
+                    <input type="password" class="form-control" id="inputVerify" name="verify" required>
+                </div>
+                <div class="col-xs-12 submit-button">
+                    <form action="verify" method="GET">
+                        <input type="submit" class="btn btn-primary" value="Submit">
+                    </form>
+                </div>
+            </form>
         </div>
-	</body>
+        <footer class="container">
+            <div class="row">
+                <small class="col-xs-12 text-left">&copy; 2019 Cadd Enterprises</small>
+            </div>
+        </footer>
+    </body>
 </html>
